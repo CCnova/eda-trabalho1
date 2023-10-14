@@ -54,7 +54,7 @@ export default class HashTable {
       hash = this.hash(key, this.level + 1);
     }
     this.pages[hash].insert(key);
-    if (this.calculateLoadFactor() > this.maxLoadFactor) {
+    if (this.calculateLoadFactor() >= this.maxLoadFactor) {
       this.split();
     }
   }
