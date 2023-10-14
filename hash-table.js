@@ -72,6 +72,11 @@ export default class HashTable {
       traverser = traverser.nextPage;
     }
     this.pages[this.N].clearEmptyLinkedPages();
+
+    this.N = (this.N + 1) % (2 * Math.pow(2, this.level));
+    if (this.N === 0) {
+      this.level = this.level + 1;
+    }
   }
 
   calculateMediumLoadFactor() {

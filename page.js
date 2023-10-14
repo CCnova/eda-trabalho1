@@ -29,12 +29,13 @@ export default class Page {
   }
 
   print() {
-    process.stdout.write(`Keys: ${this.keys} ->`);
-    if (this.nextPage) {
-      this.nextPage?.print();
-    } else {
-      process.stdout.write("\n");
+    let outputString = `Keys: ${this.keys} ->`;
+    let traverser = this.nextPage;
+    while (traverser) {
+      outputString += ` Keys: ${traverser.keys} ->`;
+      traverser = traverser.nextPage;
     }
+    console.log(outputString);
   }
 
   getNumberOfElements() {
