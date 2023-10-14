@@ -29,8 +29,41 @@ export default class Page {
   }
 
   print() {
-    console.log("Keys: " + this.keys);
-    console.log("Next page: ");
-    this.nextPage?.print();
+    process.stdout.write(`Keys: ${this.keys} ->`);
+    if (this.nextPage) {
+      this.nextPage?.print();
+    } else {
+      process.stdout.write("\n");
+    }
+  }
+
+  getNumberOfElements() {
+    let numberOfElements = this.keys.length;
+    let traverser = this.nextPage;
+    while (traverser) {
+      numberOfElements += traverser.keys.length;
+      traverser = traverser.nextPage;
+    }
+    return numberOfElements;
+  }
+
+  getNumberOfPages() {
+    let numberOfPages = 1;
+    let traverser = this.nextPage;
+    while (traverser) {
+      numberOfPages++;
+      traverser = traverser.nextPage;
+    }
+    return numberOfPages;
+  }
+
+  clearEmptyLinkedPages() {
+    let traverser = this.nextPage;
+    while (traverser) {
+      if (traverser.keys.length === 0) {
+        this.nextPage = traverser.nextPage;
+      }
+      traverser = traverser.nextPage;
+    }
   }
 }

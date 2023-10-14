@@ -1,3 +1,5 @@
+import Page from "./page.js";
+
 export default class HashTable {
   level;
   N;
@@ -8,7 +10,7 @@ export default class HashTable {
   constructor(pageSize, maxLoadFactor) {
     this.level = 0;
     this.N = 0;
-    this.pages = [[], []];
+    this.pages = [new Page(pageSize), new Page(pageSize)];
     this.pageSize = pageSize;
     this.maxLoadFactor = maxLoadFactor;
   }
@@ -21,8 +23,8 @@ export default class HashTable {
     let numberOfElements = 0;
     let numberOfPages = 0;
     for (let page of this.pages) {
-      numberOfElements += page.length;
-      numberOfPages += Math.ceil(page.length / this.pageSize) || 1;
+      numberOfElements += page.getNumberOfElements();
+      numberOfPages += page.getNumberOfPages();
     }
 
     return numberOfElements / (numberOfPages * this.pageSize);
@@ -31,7 +33,7 @@ export default class HashTable {
   calculateNumberOfPages() {
     let numberOfPages = 0;
     for (let page of this.pages) {
-      numberOfPages += Math.ceil(page.length / this.pageSize) || 1;
+      numberOfPages += page.getNumberOfPages();
     }
     return numberOfPages;
   }
@@ -41,8 +43,8 @@ export default class HashTable {
     console.log("Number of pages: " + this.calculateNumberOfPages());
     console.log("Page size: " + this.pageSize);
     console.log("Load factor: " + this.calculateLoadFactor());
-    for (let i = 0; i < this.pages.length; i++) {
-      console.log(`Page ${i}: ${this.pages[i]}`);
+    for (let page of this.pages) {
+      page.print();
     }
   }
 
@@ -51,32 +53,33 @@ export default class HashTable {
     if (hash < this.N) {
       hash = this.hash(key, this.level + 1);
     }
-    this.pages[hash].push(key);
-    if (this.calculateLoadFactor() >= this.maxLoadFactor) {
+    this.pages[hash].insert(key);
+    if (this.calculateLoadFactor() > this.maxLoadFactor) {
       this.split();
     }
   }
 
   split() {
-    this.pages.push([]);
+    this.pages.push(new Page(this.pageSize));
     const pageToSplit = this.pages[this.N];
-    this.pages[this.N] = [];
-    for (let key of pageToSplit) {
-      const hash = this.hash(key, this.level + 1);
-      this.pages[hash].push(key);
+    this.pages[this.N] = new Page(this.pageSize);
+    let traverser = pageToSplit;
+    while (traverser) {
+      for (let key of traverser.keys) {
+        const hash = this.hash(key, this.level + 1);
+        this.pages[hash].insert(key);
+      }
+      traverser = traverser.nextPage;
     }
-    this.N = (this.N + 1) % (2 * Math.pow(2, this.level));
-    if (this.N === 0) {
-      this.level++;
-    }
+    this.pages[this.N].clearEmptyLinkedPages();
   }
 
   calculateMediumLoadFactor() {
     let numberOfPages = 0;
     let spaceUsed = 0;
     for (let page of this.pages) {
-      numberOfPages += Math.ceil(page.length / this.pageSize) || 1;
-      spaceUsed += page.length;
+      numberOfPages += page.getNumberOfPages();
+      spaceUsed += page.getNumberOfElements();
     }
 
     return (spaceUsed / numberOfPages) * this.pageSize;
@@ -85,7 +88,7 @@ export default class HashTable {
   calculateNumberOfAdditionalPages() {
     let numberOfPages = 0;
     for (let page of this.pages) {
-      numberOfPages += Math.ceil(page.length / this.pageSize) || 1;
+      numberOfPages += page.getNumberOfPages();
     }
     return numberOfPages / this.pages.length;
   }
