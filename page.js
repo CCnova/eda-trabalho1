@@ -2,7 +2,9 @@ export default class Page {
   keys;
   size;
   nextPage;
+  isDerived;
 
+  i = 0;
   constructor(size) {
     this.keys = [];
     this.size = size;
@@ -15,6 +17,7 @@ export default class Page {
     } else {
       if (this.nextPage == null) {
         this.nextPage = new Page(this.size);
+        //this.nextPage.isDerived = true;
       }
       let traverser = this.nextPage;
       while (traverser.nextPage) {
@@ -22,6 +25,7 @@ export default class Page {
       }
       if (traverser.keys.length >= this.size) {
         traverser.nextPage = new Page(this.size);
+        traverser.nextPage.isDerived = true;
         traverser = traverser.nextPage;
       }
       traverser.keys.push(key);
@@ -29,11 +33,19 @@ export default class Page {
   }
 
   print() {
-    let outputString = `Keys: ${this.keys} ->`;
+    let outputString = `Page ${1}: ${this.keys}`;
     let traverser = this.nextPage;
+    let i=1;
     while (traverser) {
-      outputString += ` Keys: ${traverser.keys} ->`;
-      traverser = traverser.nextPage;
+      if(traverser.isDerived = true){
+      outputString += ` -> Page ${1+i}: ${traverser.keys}`;
+        traverser = traverser.nextPage;
+      }
+      else{
+        outputString += `Page ${1+i}: ${traverser.keys}`;
+        traverser = traverser.nextPage;
+      }
+      i+=1;
     }
     console.log(outputString);
   }

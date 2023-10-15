@@ -39,12 +39,17 @@ export default class HashTable {
   }
 
   print() {
+    let outputString;
+    let i = 0;
     console.log("Level: " + this.level);
     console.log("Number of pages: " + this.calculateNumberOfPages());
     console.log("Page size: " + this.pageSize);
     console.log("Load factor: " + this.calculateLoadFactor());
     for (let page of this.pages) {
+      outputString = `Cluster ${i+1}:`;
+      console.log(outputString);
       page.print();
+      i++;
     }
   }
 
