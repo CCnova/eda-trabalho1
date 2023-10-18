@@ -3,6 +3,8 @@ export default class Page {
   size;
   nextPage;
 
+
+  i = 0;
   constructor(size) {
     this.keys = [];
     this.size = size;
@@ -29,11 +31,13 @@ export default class Page {
   }
 
   print() {
-    let outputString = `Keys: ${this.keys} ->`;
+    let outputString = `Page ${1}: ${this.keys}`;
     let traverser = this.nextPage;
+    let i=1;
     while (traverser) {
-      outputString += ` Keys: ${traverser.keys} ->`;
+      outputString += ` -> Page ${1+i}: ${traverser.keys}`;
       traverser = traverser.nextPage;
+      i+=1;
     }
     console.log(outputString);
   }

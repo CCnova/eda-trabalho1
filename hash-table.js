@@ -39,11 +39,14 @@ export default class HashTable {
   }
 
   print() {
+    let outputString;
     console.log("Level: " + this.level);
     console.log("Number of pages: " + this.calculateNumberOfPages());
     console.log("Page size: " + this.pageSize);
     console.log("Load factor: " + this.calculateLoadFactor());
     for (let page of this.pages) {
+      outputString = `hash = ${this.hash(page.keys[0], this.level)}:`;
+      console.log(outputString);
       page.print();
     }
   }
