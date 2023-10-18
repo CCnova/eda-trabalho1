@@ -44,8 +44,13 @@ export default class HashTable {
     console.log("Number of pages: " + this.calculateNumberOfPages());
     console.log("Page size: " + this.pageSize);
     console.log("Load factor: " + this.calculateLoadFactor());
+    console.log("N: ", this.N);
     for (let page of this.pages) {
-      outputString = `hash = ${this.hash(page.keys[0], this.level)}:`;
+      let pageHash = this.hash(page.keys[0], this.level);
+      if (pageHash < this.N) {
+        pageHash = this.hash(page.keys[0], this.level + 1);
+      }
+      outputString = `hash = ${pageHash}`;
       console.log(outputString);
       page.print();
     }
@@ -99,5 +104,21 @@ export default class HashTable {
       numberOfPages += page.getNumberOfPages();
     }
     return numberOfPages / this.pages.length;
+  }
+
+  search(key) {
+    let hash = this.hash(key, this.level);
+    if (hash < this.N) {
+      hash = this.hash(key, this.level + 1);
+    }
+    let traverser = this.pages[hash];
+    while (traverser) {
+      for (let travKey of traverser.keys) {
+        if (key === travKey) {
+          return travKey;
+        }
+      }
+      traverser = traverser.nextPage;
+    }
   }
 }
