@@ -15,12 +15,31 @@ for (let i = 0; i < 1000 * choosenPageSize; i++) {
 
 hashTable.print();
 
+function insertKeys(pageSize, hashTable, storage) {
+  const range = 1000 * pageSize;
+  for (let i = 0; i < range; i++) {
+    const element = Math.floor(Math.random() * range);
+    hashTable.insert(element);
+    storage.push(element);
+  }
+}
+
+function generateNonInsertedKeys(insertedKeys, storage) {
+  while (storage.length < insertedKeys.length) {
+    const element = Math.floor(Math.random() * 1e9);
+    if (!insertedKeys.includes(element)) {
+      storage.push(element);
+    }
+  }
+}
+
 function analyseHashTable(pageSize, maxLoadFactor) {
   for (let i = 0; i < NUMBER_OF_TIME_TO_REPEAT; i++) {
+    const insertedKeys = [],
+      nonInsertedKeys = [];
     const hashTable = new HashTable(pageSize, maxLoadFactor);
-    for (let i = 0; i < 1000 * pageSize; i++) {
-      hashTable.insert(Math.floor(Math.random() * (1000 * pageSize)));
-    }
+    insertKeys(pageSize, hashTable, insertedKeys);
+    generateNonInsertedKeys(insertedKeys, nonInsertedKeys);
     hashTable.print();
   }
 }
@@ -33,4 +52,4 @@ function startAnalysis() {
   }
 }
 
-// startAnalysis();
+startAnalysis();
