@@ -15,6 +15,13 @@ for (let i = 0; i < 1000 * choosenPageSize; i++) {
 
 hashTable.print();
 
+/**
+ * Insert keys in the hash table and store the keys inserted in the storage array.
+ *
+ * @param {number} pageSize
+ * @param {HashTable} hashTable
+ * @param {Array<number>} storage
+ */
 function insertKeys(pageSize, hashTable, storage) {
   const range = 1000 * pageSize;
   for (let i = 0; i < range; i++) {
@@ -24,6 +31,12 @@ function insertKeys(pageSize, hashTable, storage) {
   }
 }
 
+/**
+ * Generate keys that are not inserted in the hash table based on insertedKeys.
+ *
+ * @param {Array<number>} insertedKeys
+ * @param {Array<number>} storage
+ */
 function generateNonInsertedKeys(insertedKeys, storage) {
   while (storage.length < insertedKeys.length) {
     const element = Math.floor(Math.random() * 1e9);
