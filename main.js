@@ -33,6 +33,12 @@ function generateNonInsertedKeys(insertedKeys, storage) {
   }
 }
 
+/**
+ * Execute the analysis of the hash table.
+ *
+ * @param {number} pageSize
+ * @param {number} maxLoadFactor
+ */
 function analyseHashTable(pageSize, maxLoadFactor) {
   for (let i = 0; i < NUMBER_OF_TIME_TO_REPEAT; i++) {
     const insertedKeys = [],
@@ -44,6 +50,9 @@ function analyseHashTable(pageSize, maxLoadFactor) {
   }
 }
 
+/**
+ * Start the analysis of the hash table executing it for all pair of page size and max load factor.
+ */
 function startAnalysis() {
   for (let pageSize of PAGE_SIZES) {
     for (let maxLoadFactor of MAX_LOAD_FACTORS) {
