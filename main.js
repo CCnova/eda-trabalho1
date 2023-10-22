@@ -15,4 +15,61 @@ for (let i = 0; i < 1000 * choosenPageSize; i++) {
 
 hashTable.print();
 
+/**
+ * Insert keys in the hash table and store the keys inserted in the storage array.
+ *
+ * @param {number} pageSize
+ * @param {HashTable} hashTable
+ * @param {Array<number>} storage
+ */
+function insertKeys(pageSize, hashTable, storage) {
+  const range = 1000 * pageSize;
+  for (let i = 0; i < range; i++) {
+    const element = Math.floor(Math.random() * range);
+    hashTable.insert(element);
+    storage.push(element);
+  }
+}
 
+/**
+ * Generate keys that are not inserted in the hash table based on insertedKeys.
+ *
+ * @param {Array<number>} insertedKeys
+ * @param {Array<number>} storage
+ */
+function generateNonInsertedKeys(insertedKeys, storage) {
+  while (storage.length < insertedKeys.length) {
+    const element = Math.floor(Math.random() * 1e9);
+    if (!insertedKeys.includes(element)) {
+      storage.push(element);
+    }
+  }
+}
+
+/**
+ * Execute the analysis of the hash table.
+ *
+ * @param {number} pageSize
+ * @param {number} maxLoadFactor
+ */
+function analyseHashTable(pageSize, maxLoadFactor) {
+  for (let i = 0; i < NUMBER_OF_TIME_TO_REPEAT; i++) {
+    const insertedKeys = [],
+      nonInsertedKeys = [];
+    const hashTable = new HashTable(pageSize, maxLoadFactor);
+    insertKeys(pageSize, hashTable, insertedKeys);
+    generateNonInsertedKeys(insertedKeys, nonInsertedKeys);
+    hashTable.print();
+  }
+}
+
+/**
+ * Start the analysis of the hash table executing it for all pair of page size and max load factor.
+ */
+function startAnalysis() {
+  for (let pageSize of PAGE_SIZES) {
+    for (let maxLoadFactor of MAX_LOAD_FACTORS) {
+      analyseHashTable(pageSize, maxLoadFactor);
+    }
+  }
+}
