@@ -31,15 +31,18 @@ export default class Page {
   }
 
   print() {
+    let soma = this.keys.length;
     let outputString = `Page ${1}: ${this.keys}`;
     let traverser = this.nextPage;
     let i=1;
     while (traverser) {
+       soma = traverser.keys.length;
       outputString += ` -> Page ${1+i}: ${traverser.keys}`;
       traverser = traverser.nextPage;
       i+=1;
     }
     console.log(outputString);
+    return soma;
   }
 
   getNumberOfElements() {
