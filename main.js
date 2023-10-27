@@ -20,7 +20,7 @@ analyseHashTable(hashTable);
 function insertKeys(hashTable, storage) {
   const range = 1000 * hashTable.pageSize;
   for (let i = 0; i < range; i++) {
-    const element = Math.floor(Math.random() * range);
+    const element = Math.floor(Math.random() * 1e6);
     hashTable.insert(element);
     storage.push(element);
   }
@@ -34,7 +34,7 @@ function insertKeys(hashTable, storage) {
  */
 function generateNonInsertedKeys(insertedKeys, storage) {
   while (storage.length < insertedKeys.length) {
-    const element = Math.floor(Math.random() * 1e9);
+    const element = Math.floor(Math.random() * 1e6);
     if (!insertedKeys.includes(element)) {
       storage.push(element);
     }
