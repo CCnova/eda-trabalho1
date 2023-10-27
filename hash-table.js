@@ -39,8 +39,6 @@ export default class HashTable {
   }
 
   print() {
-    let outputString;
-    let contador = 0;
     console.log("Level: " + this.level);
     console.log("Number of pages: " + this.calculateNumberOfPages());
     console.log("Page size: " + this.pageSize);
@@ -51,20 +49,9 @@ export default class HashTable {
       "Páginas adicionais em media: ",
       this.calculateNumberOfAdditionalPages()
     );
-    for (let page of this.pages) {
-      let pageHash = this.hash(page.keys[0], this.level);
-      if (pageHash < this.N) {
-        pageHash = this.hash(page.keys[0], this.level + 1);
-      }
-      if (!isNaN(pageHash)) {
-        outputString = `hash = ${pageHash}`;
-        console.log(outputString);
-        page.print();
-      } else {
-        outputString = `hash = ${contador}`;
-        console.log(outputString);
-      }
-      contador++;
+    for (let i = 0; i < this.pages.length; i++) {
+      console.log(`hash = ${i}`);
+      this.pages[i].print();
     }
   }
 
