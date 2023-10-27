@@ -4,13 +4,6 @@ const PAGE_SIZES = [1, 5, 10, 20, 50];
 const MAX_LOAD_FACTORS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
 const NUMBER_OF_TIMES_TO_REPEAT = 1;
 
-const choosenPageSize = PAGE_SIZES[1];
-const choosenMaxLoadFactor = MAX_LOAD_FACTORS[6];
-
-const hashTable = new HashTable(choosenPageSize, choosenMaxLoadFactor);
-
-analyseHashTable(hashTable);
-
 /**
  * Insert keys in the hash table and store the keys inserted in the storage array.
  *
@@ -18,9 +11,12 @@ analyseHashTable(hashTable);
  * @param {Array<number>} storage
  */
 function insertKeys(hashTable, storage) {
-  const range = 1000 * hashTable.pageSize;
-  for (let i = 0; i < range; i++) {
-    const element = Math.floor(Math.random() * 1e6);
+  const numberOfKeysToInsert = 1000 * hashTable.pageSize;
+  for (let i = 0; i < numberOfKeysToInsert; i++) {
+    let element = Math.floor(Math.random() * 1e6);
+    while (storage.includes(element)) {
+      element = Math.floor(Math.random() * 1e6);
+    }
     hashTable.insert(element);
     storage.push(element);
   }
@@ -35,7 +31,7 @@ function insertKeys(hashTable, storage) {
 function generateNonInsertedKeys(insertedKeys, storage) {
   while (storage.length < insertedKeys.length) {
     const element = Math.floor(Math.random() * 1e6);
-    if (!insertedKeys.includes(element)) {
+    if (!insertedKeys.includes(element) && !storage.includes(element)) {
       storage.push(element);
     }
   }
@@ -73,10 +69,26 @@ function analyseHashTable(hashTable) {
 /**
  * Start the analysis of the hash table executing it for all pair of page size and max load factor.
  */
-function startAnalysis() {
+function startBroadAnalysis() {
   for (let pageSize of PAGE_SIZES) {
     for (let maxLoadFactor of MAX_LOAD_FACTORS) {
-      analyseHashTable(new HashTable(pageSize, maxLoadFactor));
+      const hashTable = new HashTable(pageSize, maxLoadFactor);
+      analyseHashTable(hashTable);
     }
   }
 }
+
+/**
+ * Start the analysis of the hash table executing it for one pair of page size and max load factor.
+ */
+function startOneTimeAnalysis() {
+  const choosenPageSize = PAGE_SIZES[1];
+  const choosenMaxLoadFactor = MAX_LOAD_FACTORS[6];
+
+  const hashTable = new HashTable(choosenPageSize, choosenMaxLoadFactor);
+
+  analyseHashTable(hashTable);
+}
+
+// startBroadAnalysis();
+startOneTimeAnalysis();
