@@ -2,28 +2,29 @@ import HashTable from "./hash-table.js";
 
 const PAGE_SIZES = [1, 5, 10, 20, 50];
 const MAX_LOAD_FACTORS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
-const NUMBER_OF_TIME_TO_REPEAT = 10;
+const NUMBER_OF_TIMES_TO_REPEAT = 1;
 
-const choosenPageSize = PAGE_SIZES[1];
-const choosenMaxLoadFactor = MAX_LOAD_FACTORS[0];
+const choosenPageSize = PAGE_SIZES[0];
+const choosenMaxLoadFactor = MAX_LOAD_FACTORS[6];
+const insertedKeys = [];
+const nonInsertedKeys = [];
 
 const hashTable = new HashTable(choosenPageSize, choosenMaxLoadFactor);
 
-for (let i = 0; i < 1000 * choosenPageSize; i++) {
-  hashTable.insert(Math.floor(Math.random() * 1e9));
-}
+analyseHashTable(hashTable);
 
-hashTable.print();
+// for (let i = 0; i < 1000 * choosenPageSize; i++) {
+//   hashTable.search(Math.floor(Math.random() * 1e9));
+// }
 
 /**
  * Insert keys in the hash table and store the keys inserted in the storage array.
  *
- * @param {number} pageSize
  * @param {HashTable} hashTable
  * @param {Array<number>} storage
  */
-function insertKeys(pageSize, hashTable, storage) {
-  const range = 1000 * pageSize;
+function insertKeys(hashTable, storage) {
+  const range = 1000 * hashTable.pageSize;
   for (let i = 0; i < range; i++) {
     const element = Math.floor(Math.random() * range);
     hashTable.insert(element);
@@ -49,17 +50,15 @@ function generateNonInsertedKeys(insertedKeys, storage) {
 /**
  * Execute the analysis of the hash table.
  *
- * @param {number} pageSize
- * @param {number} maxLoadFactor
+ * @param {HashTable} hashTable
  */
-function analyseHashTable(pageSize, maxLoadFactor) {
-  for (let i = 0; i < NUMBER_OF_TIME_TO_REPEAT; i++) {
-    const insertedKeys = [],
-      nonInsertedKeys = [];
-    const hashTable = new HashTable(pageSize, maxLoadFactor);
-    insertKeys(pageSize, hashTable, insertedKeys);
+function analyseHashTable(hashTable) {
+  for (let i = 0; i < NUMBER_OF_TIMES_TO_REPEAT; i++) {
+    insertKeys(hashTable, insertedKeys);
     generateNonInsertedKeys(insertedKeys, nonInsertedKeys);
     hashTable.print();
+    hashTable.search(insertedKeys[0]);
+    hashTable.search(nonInsertedKeys[0]);
   }
 }
 
