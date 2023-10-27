@@ -60,7 +60,7 @@ function analyseHashTable(hashTable) {
     console.log(
       "-------------- Procurando por chaves existentes --------------"
     );
-    for (let insertedKey of insertedKeys.slice(0, 5)) {
+    for (let insertedKey of insertedKeys.sort().slice(0, 10)) {
       hashTable.search(insertedKey);
     }
   }
@@ -82,8 +82,8 @@ function startBroadAnalysis() {
  * Start the analysis of the hash table executing it for one pair of page size and max load factor.
  */
 function startOneTimeAnalysis() {
-  const choosenPageSize = PAGE_SIZES[1];
-  const choosenMaxLoadFactor = MAX_LOAD_FACTORS[6];
+  const choosenPageSize = PAGE_SIZES[0];
+  const choosenMaxLoadFactor = MAX_LOAD_FACTORS[7];
 
   const hashTable = new HashTable(choosenPageSize, choosenMaxLoadFactor);
 
