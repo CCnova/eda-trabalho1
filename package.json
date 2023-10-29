@@ -2,12 +2,12 @@
   "name": "eda_trabalho1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node main.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Caio Nova and Matheus Costa",
   "license": "ISC"
 }

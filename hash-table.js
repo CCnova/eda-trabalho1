@@ -39,29 +39,19 @@ export default class HashTable {
   }
 
   print() {
-    let outputString;
-    let contador = 0;
     console.log("Level: " + this.level);
     console.log("Number of pages: " + this.calculateNumberOfPages());
     console.log("Page size: " + this.pageSize);
-    console.log("Load factor: " + this.calculateLoadFactor());
+    console.log("Max Load Factor: " + this.maxLoadFactor);
+    console.log("Load factor Atual: " + this.calculateLoadFactor());
     console.log("N: ", this.N);
-    console.log("Páginas adicionais: ", this.calculateNumberOfAdditionalPages());
-    for (let page of this.pages) {
-      let pageHash = this.hash(page.keys[0], this.level);
-      if (pageHash < this.N) {
-        pageHash = this.hash(page.keys[0], this.level + 1);
-      }
-      if (!isNaN(pageHash)){
-        outputString = `hash = ${pageHash}`;
-        console.log(outputString);
-        page.print();
-      }
-      else{
-        outputString = `hash = ${contador}`;
-        console.log(outputString);
-      }
-      contador ++;
+    console.log(
+      "Páginas adicionais em media: ",
+      this.calculateNumberOfAdditionalPages()
+    );
+    for (let i = 0; i < this.pages.length; i++) {
+      console.log(`hash = ${i}`);
+      this.pages[i].print();
     }
   }
 
@@ -120,14 +110,22 @@ export default class HashTable {
     if (hash < this.N) {
       hash = this.hash(key, this.level + 1);
     }
+    console.log(`Procurando por ${key} com hash ${hash}`);
     let traverser = this.pages[hash];
+    let numberOfAccess = 1;
     while (traverser) {
       for (let travKey of traverser.keys) {
         if (key === travKey) {
+          console.log("Número de acessos: ", numberOfAccess);
           return travKey;
         }
       }
       traverser = traverser.nextPage;
+      if (traverser) {
+        numberOfAccess += 1;
+      }
     }
+
+    console.log("Número de acessos: ", numberOfAccess);
   }
 }
