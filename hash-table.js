@@ -128,4 +128,16 @@ export default class HashTable {
 
     console.log("Número de acessos: ", numberOfAccess);
   }
+
+  getMaxNumberOfPages() {
+    let maxNumberOfPages = 0;
+    for (let page of this.pages) {
+      const numberOfPages = page.getNumberOfPages();
+      if (numberOfPages > maxNumberOfPages) {
+        maxNumberOfPages = numberOfPages;
+      }
+    }
+
+    return maxNumberOfPages;
+  }
 }
