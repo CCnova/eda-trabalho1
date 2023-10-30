@@ -1,8 +1,13 @@
+import * as fs from "fs";
 import HashTable from "./hash-table.js";
 
 const PAGE_SIZES = [1, 5, 10, 20, 50];
 const MAX_LOAD_FACTORS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
 const NUMBER_OF_TIMES_TO_REPEAT = 1;
+
+let iMediumLoadFactors = [],
+  iNumberOfAdditionalPages = [],
+  iMaxNumberOfPages = [];
 
 /**
  * Insert keys in the hash table and store the keys inserted in the storage array.
@@ -18,6 +23,9 @@ function insertKeys(hashTable, storage) {
       element = Math.floor(Math.random() * 1e6);
     }
     hashTable.insert(element);
+    iMediumLoadFactors.push(hashTable.calculateLoadFactor());
+    iNumberOfAdditionalPages.push(hashTable.calculateNumberOfAdditionalPages());
+    iMaxNumberOfPages.push(hashTable.getMaxNumberOfPages());
     storage.push(element);
   }
 }
@@ -37,16 +45,46 @@ function generateNonInsertedKeys(insertedKeys, storage) {
   }
 }
 
+function generateIMediumLoadFactorsGraph() {
+  const data = JSON.stringify({
+    x: Array.from(Array(iMediumLoadFactors.length).keys()),
+    y: iMediumLoadFactors,
+  });
+
+  return fs.writeFileSync("iMediumLoadFactors.json", data);
+}
+
+function generateINumberOfAdditionalPagesGraph() {
+  const data = JSON.stringify({
+    x: Array.from(Array(iNumberOfAdditionalPages.length).keys()),
+    y: iNumberOfAdditionalPages,
+  });
+
+  return fs.writeFileSync("iNumberOfAdditionalPages.json", data);
+}
+
+function generateIMaxNumberOfPagesGraph() {
+  const data = JSON.stringify({
+    x: Array.from(Array(iMaxNumberOfPages.length).keys()),
+    y: iMaxNumberOfPages,
+  });
+
+  return fs.writeFileSync("iMaxNumberOfPages.json", data);
+}
+
 /**
  * Execute the analysis of the hash table a `NUMBER_OF_TIMES_TO_REPEAT` times.
  *
  * @param {HashTable} hashTable
  */
-function analyseHashTable(hashTable) {
+async function analyseHashTable(hashTable) {
   for (let i = 0; i < NUMBER_OF_TIMES_TO_REPEAT; i++) {
     const insertedKeys = [],
       nonInsertedKeys = [];
     insertKeys(hashTable, insertedKeys);
+    generateIMediumLoadFactorsGraph();
+    generateINumberOfAdditionalPagesGraph();
+    generateIMaxNumberOfPagesGraph();
     generateNonInsertedKeys(insertedKeys, nonInsertedKeys);
     hashTable.print();
 
@@ -82,13 +120,13 @@ function startBroadAnalysis() {
  * Start the analysis of the hash table executing it for one pair of page size and max load factor.
  */
 function startOneTimeAnalysis() {
-  const choosenPageSize = PAGE_SIZES[0];
-  const choosenMaxLoadFactor = MAX_LOAD_FACTORS[7];
+  const choosenPageSize = PAGE_SIZES[2];
+  const choosenMaxLoadFactor = MAX_LOAD_FACTORS[6];
 
   const hashTable = new HashTable(choosenPageSize, choosenMaxLoadFactor);
 
   analyseHashTable(hashTable);
 }
 
-// startBroadAnalysis();
-startOneTimeAnalysis();
+startBroadAnalysis();
+// startOneTimeAnalysis();
